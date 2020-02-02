@@ -7,6 +7,11 @@ from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 from django.http import HttpResponseRedirect
 
+try:
+    from django.utils.deprecation import MiddlewareMixin
+except ImportError:
+    MiddlewareMixin = object
+
 from .models import NoAffiliate
 from . import utils
 
@@ -42,7 +47,7 @@ def get_affiliate(request, new_aid, prev_aid, prev_aid_dt):
     return request._cached_affiliate
 
 
-class AffiliateMiddleware(object):
+class AffiliateMiddleware(MiddlewareMixin):
 
     def process_request(self, request):
         new_aid, prev_aid, prev_aid_dt = None, None, None
